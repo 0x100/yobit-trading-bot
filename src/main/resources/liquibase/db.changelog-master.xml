@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+    <changeSet id="001" author="0x100">
+        <createSequence sequenceName="sq_nonce"
+                        startValue="1"
+                        incrementBy="1"/>
+    </changeSet>
+
+    <changeSet id="002" author="0x100">
+        <createTable tableName="trade">
+            <column name="id" type="int" autoIncrement="true"/>
+            <column name="pair" type="varchar(10)"/>
+            <column name="amount" type="decimal" defaultValue="0"/>
+            <column name="buy_price" type="decimal" defaultValue="0"/>
+            <column name="buy_date" type="datetime"/>
+            <column name="sell_price" type="decimal" defaultValue="0"/>
+            <column name="sell_date" type="datetime"/>
+            <column name="profit" type="decimal" defaultValue="0"/>
+            <column name="status" type="varchar(10)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003" author="0x100">
+        <addColumn tableName="trade">
+            <column name="buy_order_id" type="long"/>
+            <column name="sell_order_id" type="long"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="004" author="0x100">
+        <addColumn tableName="trade">
+            <column name="modif_time" type="datetime"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="005" author="0x100">
+        <createTable tableName="currency_info">
+            <column name="pair" type="varchar(10)"/>
+            <column name="blocked" type="boolean" defaultValue="false"/>
+            <column name="blocked_price" type="decimal"/>
+            <column name="modif_time" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="006" author="0x100">
+        <addColumn tableName="trade">
+            <column name="order_attempts" type="int" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="007" author="0x100">
+        <addColumn tableName="currency_info">
+            <column name="status" type="varchar(10)" defaultValue="ACTIVE" />
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="008" author="0x100">
+        <sql>
+            UPDATE currency_info
+            SET status = 'ACTIVE'
+            WHERE blocked IS NULL OR blocked = true;
+        </sql>
+        <sql>
+            UPDATE currency_info
+            SET status = 'BLOCKED'
+            WHERE blocked IS NULL OR blocked = true;
+        </sql>
+    </changeSet>
+
+    <changeSet id="009" author="0x100">
+        <dropColumn tableName="currency_info" columnName="blocked" />
+    </changeSet>
+
+</databaseChangeLog>

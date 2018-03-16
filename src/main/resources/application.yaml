@@ -1,0 +1,70 @@
+spring:
+    datasource:
+        url: jdbc:h2:file:./db/yobit-trading-bot;DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE
+        driverClassName: org.h2.Driver
+    jpa:
+        hibernate:
+            ddl-auto: validate
+        properties:
+            hibernate:
+                current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
+
+liquibase:
+    change-log: classpath:/liquibase/db.changelog-master.xml
+    url: ${spring.datasource.url}
+    user: sa
+    password:
+    drop-first: false
+
+yobit:
+    publicApiUrl:  https://yobit.io/api/3
+    tradingApiUrl: https://yobit.io/tapi
+    key: <YOUR_KEY>
+    secretKey: <YOUR_SECRET_KEY>
+    buyFee: 1.002
+    sellFee: 0.002
+    client:
+        tradesHistoryLimit: 7
+        depthLimit: 10
+
+httpClient:
+    readTimeout: 10000
+
+bot:
+    currencies: #Permanent currencies, another will formed automatically
+#        - LIZA
+#        - DOGE
+    bannedCurrencies:
+#        - TGS
+    baseCurrency: RUR
+    tickInterval: 2001
+    refreshCurrenciesListInterval: 3600000
+    rurBalanceRateCanUse: 0.2
+    maxRurBalanceCanUse: 399.9
+    profitRate: 0.0
+    stopLossRate: 0.0001
+    diffRate2CancelOrder: 0.0000000001
+    frozenRurBalance: 0.0
+    minBuySum: 1.1
+    parallelTradesCount: 3
+    maxDayCount2Sell: 7
+    lowestPriceMaxExceedTimes: 1.5
+    maxOrderAttempts: 50
+    priceAppendix: 0.00000001
+    diffToCancel: 0.00000250
+    currencyVolumeThreshold: 500000.0
+    currencyFilterThreshold: 350.0
+
+
+messages:
+    action:
+        buy: buy
+        sell: sell
+        wait: wait
+        wait_4_buy: waiting for purchase
+        wait_4_sell: waiting for sale
+
+logging:
+    level:
+        ru._x100.yobitbot: DEBUG
+    pattern.console: '%clr( %d{HH:mm:ss}){cyan}   %clr(%m){faint}%n'
