@@ -17,16 +17,15 @@ class YobitRepository {
     SessionFactory sessionFactory
 
     Long getNonce() {
-        Query query = getSession().createSQLQuery("select sq_nonce.nextval from dual")
+        Query query = session.createSQLQuery("select sq_nonce.nextval from dual")
 
         long nonce = query.uniqueResult() as long
-        log.info("nonce: ${nonce}")
+        log.debug("nonce: ${nonce}")
 
         nonce
     }
 
     private Session getSession() {
-        Session session = sessionFactory.getCurrentSession()
-        session
+        sessionFactory.currentSession
     }
 }

@@ -8,18 +8,17 @@ import org.springframework.stereotype.Component
 class BotConfig {
 
     String baseCurrency
+    BigDecimal baseCurrencyBalanceRateCanUse
+    BigDecimal maxBaseCurrencyBalanceCanUse
+    BigDecimal frozenBaseCurrencyBalance
     List<String> currencies
     List<String> bannedCurrencies
     int parallelTradesCount
     int maxDayCount2Sell
-    int maxOrderAttempts
     BigDecimal lowestPriceMaxExceedTimes
-    BigDecimal rurBalanceRateCanUse
-    BigDecimal maxRurBalanceCanUse
     BigDecimal profitRate
     BigDecimal stopLossRate
     BigDecimal diffRate2CancelOrder
-    BigDecimal frozenRurBalance
     BigDecimal minBuySum
     BigDecimal priceAppendix
     BigDecimal diffToCancel

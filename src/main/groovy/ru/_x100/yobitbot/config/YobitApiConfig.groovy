@@ -11,7 +11,6 @@ class YobitApiConfig {
     String tradingApiUrl
     String key
     String secretKey
-    BigDecimal buyFee
-    BigDecimal sellFee
+    BigDecimal fee
     Client client
 }

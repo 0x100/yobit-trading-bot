@@ -21,8 +21,7 @@ yobit:
     tradingApiUrl: https://yobit.io/tapi
     key: <YOUR_KEY>
     secretKey: <YOUR_SECRET_KEY>
-    buyFee: 1.002
-    sellFee: 0.002
+    fee: 0.002
     client:
         tradesHistoryLimit: 7
         depthLimit: 10
@@ -37,23 +36,22 @@ bot:
     bannedCurrencies:
 #        - TGS
     baseCurrency: RUR
-    tickInterval: 2001
-    refreshCurrenciesListInterval: 3600000
-    rurBalanceRateCanUse: 0.2
-    maxRurBalanceCanUse: 399.9
+    baseCurrencyBalanceRateCanUse: 0.2
+    maxBaseCurrencyBalanceCanUse: 999.9
+    frozenBaseCurrencyBalance: 0.0
+    tickInterval: 2000
+    refreshCurrenciesListInterval: 1800000
     profitRate: 0.0
     stopLossRate: 0.0001
     diffRate2CancelOrder: 0.0000000001
-    frozenRurBalance: 0.0
-    minBuySum: 1.1
+    minBuySum: 100
     parallelTradesCount: 3
     maxDayCount2Sell: 7
     lowestPriceMaxExceedTimes: 1.5
-    maxOrderAttempts: 50
     priceAppendix: 0.00000001
     diffToCancel: 0.00000250
     currencyVolumeThreshold: 500000.0
-    currencyFilterThreshold: 350.0
+    currencyFilterThreshold: 400.0
 
 
 messages:

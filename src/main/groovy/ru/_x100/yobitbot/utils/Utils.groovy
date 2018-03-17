@@ -37,16 +37,21 @@ class Utils {
         BigDecimal profit = 0.0
         if (sellPrice && amount && buyPrice) {
             BigDecimal sellSum = sellPrice * amount
-            profit = sellSum - sellSum * yobitApiConfig.sellFee - buyPrice * amount * yobitApiConfig.buyFee
+            sellSum -= sellSum * yobitApiConfig.fee
+
+            BigDecimal buySum = buyPrice * amount
+            buySum += buySum * yobitApiConfig.fee
+
+            profit = sellSum - buySum
         }
         profit
     }
 
     String getTradeRecordAsString(Trade tradeRecord, BigDecimal currentSellPrice) {
-        String result = "${tradeRecord.status} "
+        String result = ""
 
         if (tradeRecord.amount) {
-            result += ": ${decimalFormat.format(tradeRecord.amount)}"
+            result += "amount: ${decimalFormat.format(tradeRecord.amount)}"
 
             if (tradeRecord.buyPrice) {
                 result += ", sum: ${shortDecimalFormat.format(tradeRecord.buyPrice * tradeRecord.amount)}"
@@ -55,9 +60,9 @@ class Utils {
                 BigDecimal sellPrice = (tradeRecord.sellPrice ?: currentSellPrice) - botConfig.priceAppendix
                 result += ", profit: ${decimalFormat.format(calcProfit(tradeRecord.amount, tradeRecord.buyPrice, sellPrice))} (${shortDecimalFormat.format(((sellPrice - tradeRecord.buyPrice) / tradeRecord.buyPrice) * 100.0)}%)"
 
-                if (tradeRecord.sellPrice) {
-                    result += ", sell price: ${decimalFormat.format(tradeRecord.sellPrice)}"
-                }
+//                if (tradeRecord.sellPrice) {
+//                    result += ", sell price: ${decimalFormat.format(tradeRecord.sellPrice)}"
+//                }
             }
         }
         return result

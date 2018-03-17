@@ -41,7 +41,7 @@ class CreateSellOrderStrategy extends AbstractTradeStrategy {
                     CurrencyInfo currencyInfo = currencyRepository.findOneByPair(tradeRecord.pair)
                     if (!currencyInfo.blocked) {
                         currencyInfo.blocked = true
-                        currencyInfo.blockedPrice = sellPrice + sellPrice * yobitApiConfig.sellFee
+                        currencyInfo.blockedPrice = sellPrice + sellPrice * yobitApiConfig.fee
                         currencyRepository.saveAndFlush(currencyInfo)
                         log.info("Currency is blocked on price ${utils.decimalFormat.format(sellPrice)}")
                     }
@@ -90,11 +90,12 @@ class CreateSellOrderStrategy extends AbstractTradeStrategy {
         BigDecimal minSellProfit = getMinSellProfit(tradeRecord.amount, tradeRecord.buyPrice, botConfig.profitRate)
         BigDecimal profit = utils.calcProfit(tradeRecord.amount, tradeRecord.buyPrice, advice.sellPrice - botConfig.priceAppendix)
 
-        if (tradeRecord.status == TradeStatus.PURCHASED &&
-                (advice.stopLoss || profit > minSellProfit)) {
+        if (tradeRecord.status == TradeStatus.PURCHASED /*&&
+                (advice.stopLoss || profit > minSellProfit)*/) {
 
             if (prevAdvice.action == Action.WAIT_4_SELL &&
-                    (prevAdvice.price && advice.price <= prevAdvice.price || profit > getMinSellProfit(tradeRecord.amount, tradeRecord.buyPrice, 0.01))) {
+                    (prevAdvice.price && advice.price <= prevAdvice.price || profit > getMinSellProfit(tradeRecord.amount, tradeRecord.buyPrice, 0.01)) ||
+                    prevAdvice.action == Action.SELL) {
 
                 action = Action.SELL
 

@@ -27,17 +27,17 @@ class CreateBuyOrderStrategy extends AbstractTradeStrategy {
             log.info("${advice.price - maxBuyPrice < 0.0 ? 'good' : 'bad'} price for buy, " + "need < ${utils.decimalFormat.format(maxBuyPrice)}")
 
             BigDecimal baseCurrencyBalance = getCurrencyBalance(botConfig.baseCurrency)
-            BigDecimal balance = baseCurrencyBalance - botConfig.frozenRurBalance
+            BigDecimal balance = baseCurrencyBalance - botConfig.frozenBaseCurrencyBalance
             if (balance > 0.0) {
 
                 BigDecimal sum = balance / activeCurrenciesCount
                 if (sum > 0.0) {
 
-                    if (sum > balance * botConfig.rurBalanceRateCanUse) {
-                        sum = balance * botConfig.rurBalanceRateCanUse
+                    if (sum > balance * botConfig.baseCurrencyBalanceRateCanUse) {
+                        sum = balance * botConfig.baseCurrencyBalanceRateCanUse
                     }
-                    if (sum > botConfig.maxRurBalanceCanUse) {
-                        sum = botConfig.maxRurBalanceCanUse
+                    if (sum > botConfig.maxBaseCurrencyBalanceCanUse) {
+                        sum = botConfig.maxBaseCurrencyBalanceCanUse
                     }
                     if (sum >= botConfig.minBuySum) {
 
@@ -106,7 +106,7 @@ class CreateBuyOrderStrategy extends AbstractTradeStrategy {
 
             if (prevAdvice.action == Action.WAIT_4_BUY &&
                     prevAdvice.price &&
-                    advice.price >= prevAdvice.price) {
+                    advice.price >= prevAdvice.price || prevAdvice.action == Action.BUY) {
 
                 action = Action.BUY
 
@@ -127,7 +127,7 @@ class CreateBuyOrderStrategy extends AbstractTradeStrategy {
         BigDecimal threshold = 0.0
 
         if (avg > 0.0 && high > 0.0 && low > 0.0) {
-            threshold = avg + (high - avg) * 0.25
+            threshold = avg + (high - avg) * 0.75
             BigDecimal priceLimit = low * BigDecimal.valueOf(botConfig.lowestPriceMaxExceedTimes)
             return threshold <= priceLimit ? threshold : priceLimit
         }

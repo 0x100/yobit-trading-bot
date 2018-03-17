@@ -276,10 +276,14 @@ class TradeBot {
         if (amount > 0.0 && buySum > 0.0) {
 
             BigDecimal sellSum = sellPrice * amount
-            BigDecimal profit = sellSum - sellSum * yobitApiConfig.sellFee - buySum * yobitApiConfig.buyFee
+            sellSum -= sellSum * yobitApiConfig.fee
+
+            buySum += buySum * yobitApiConfig.fee
+
+            BigDecimal profit = sellSum - buySum
             BigDecimal loss = -profit
 
-            if (loss > 0.01 && buySum * yobitApiConfig.buyFee * botConfig.stopLossRate <= loss) {
+            if (loss > 0.01 && buySum * botConfig.stopLossRate <= loss) {
                 losses = loss
             }
         }
@@ -349,29 +353,30 @@ class TradeBot {
         String buyPriceStr = utils.decimalFormat.format(currency24hInfo.buy)
         String sellPriceStr = utils.decimalFormat.format(currency24hInfo.sell)
 
-        "price ${currentPriceStr}, high ${highPriceStr}, avg ${avgPriceStr}, low ${lowPriceStr}, buy ${buyPriceStr}, sell ${sellPriceStr}"
+        "price ${currentPriceStr}, buy ${buyPriceStr}, sell ${sellPriceStr}"
     }
 
     private void logCurrencyHeader(CurrencyInfo currencyInfo, TrendType trendType, List<Trade> tradeRecords, List<Map> currencyTrades, String pairCode, Map currency24hInfo) {
-        log.info '-----------------------------------------------------'
-        log.info "                       ${currencyInfo.pair} ${getTrendArrow(trendType)}(${utils.decimalFormat.format(currencyAmountInTrading(tradeRecords) ?: 0.0)}${currencyInfo.blocked ? ', BLOCKED' : ''}) ${getCurrencyPriceInfo(currencyTrades, currency24hInfo[pairCode] as Map)}"
+        log.info '--------------------------------------------------------------------------------'
+        log.info " ${currencyInfo.pair} ${getTrendArrow(trendType)}(${utils.decimalFormat.format(currencyAmountInTrading(tradeRecords) ?: 0.0)}${currencyInfo.blocked ? ', BLOCKED' : ''}) ${getCurrencyPriceInfo(currencyTrades, currency24hInfo[pairCode] as Map)}"
     }
 
     private void logTradeRecordInfo(int index, Trade tradeRecord, Map currency24hInfo) {
         log.debug('')
-        log.debug("${index + 1}. ${utils.getTradeRecordAsString(tradeRecord, currency24hInfo.sell as BigDecimal)}")
+        log.info("${index + 1}. ${tradeRecord.status}")
+        log.debug("${utils.getTradeRecordAsString(tradeRecord, currency24hInfo.sell as BigDecimal)}")
     }
 
     private void logTotalInfo() {
         log.info('')
-        log.info('====================================================================================================================================================================================')
+        log.info('================================================================================')
         log.info('')
         log.info("Buy advices count: ${TradeSessionData.buyAdvicesCount}")
         log.info("Sell advices count: ${TradeSessionData.sellAdvicesCount}")
         log.info('')
 
         log.info("Total profit: ${utils.shortDecimalFormat.format(tradeRepository.getTotalProfit(TradeStatus.SOLD))} ${botConfig.baseCurrency}")
-        log.info("Now in trading: ${utils.shortDecimalFormat.format(tradeRepository.getTradingSum(Arrays.asList(TradeStatus.PURCHASED, TradeStatus.BUY_ORDER, TradeStatus.SELL_ORDER), this.currencies.stream().map { it.pair }.collect(Collectors.toList())) ?: 0.0)} ${botConfig.baseCurrency}")
+        log.info("Now in trading: ${utils.shortDecimalFormat.format(tradeRepository.getTradingSum(Arrays.asList(TradeStatus.PURCHASED, TradeStatus.SELL_ORDER), this.currencies.stream().map { it.pair }.collect(Collectors.toList())) ?: 0.0)} ${botConfig.baseCurrency}")
         log.info('')
     }
 
@@ -379,10 +384,10 @@ class TradeBot {
         String trendArrow = ''
         switch (trendType) {
             case TrendType.UP:
-                trendArrow = '↑ '
+                trendArrow = '↑ UP '
                 break
             case TrendType.DOWN:
-                trendArrow = '↓ '
+                trendArrow = '↓ DOWN '
         }
         trendArrow
     }
