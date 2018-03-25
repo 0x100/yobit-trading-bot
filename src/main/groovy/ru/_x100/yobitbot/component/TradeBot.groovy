@@ -161,7 +161,7 @@ class TradeBot {
     private List<CurrencyInfo> loadCurrencies4Trade() {
 
         List<CurrencyInfo> blockedCurrencies4Sell = currencyRepository.findByStatus(CurrencyStatus.BLOCKED).stream()
-                .filter { !tradeRepository.findByPairAndStatusIn(it.pair, Collections.singletonList(TradeStatus.PURCHASED)).empty }
+                .filter { !tradeRepository.findByPairAndStatusIn(it.pair, Arrays.asList(TradeStatus.PURCHASED, TradeStatus.SELL_ORDER)).empty }
                 .collect()
         log.info("Blocked currencies for sell: ${blockedCurrencies4Sell}")
 
