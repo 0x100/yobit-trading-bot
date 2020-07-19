@@ -24,4 +24,7 @@ interface TradeRepository extends JpaRepository<Trade, Integer> {
 
     @Query("SELECT sum(t.amount) FROM Trade t WHERE t.pair = ?1 AND t.status IN ?2")
     BigDecimal getTradingAmount(String currencyPair, List<TradeStatus> statuses)
+
+    @Query(value = "SELECT sq_nonce.nextval FROM dual", nativeQuery = true)
+    Long getNonce()
 }

@@ -3,7 +3,6 @@ package ru._x100.yobitbot.config
 import org.apache.http.conn.ssl.NoopHostnameVerifier
 import org.apache.http.impl.client.CloseableHttpClient
 import org.apache.http.impl.client.HttpClients
-import org.hibernate.SessionFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean
@@ -15,8 +14,6 @@ import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 import org.springframework.web.client.RestTemplate
 
-import javax.persistence.EntityManagerFactory
-
 @Configuration
 class AppConfig {
 
@@ -24,7 +21,7 @@ class AppConfig {
     YobitApiConfig clientProperties
 
     @Bean
-    @ConfigurationProperties(prefix = "httpClient")
+    @ConfigurationProperties(prefix = "http-client")
     HttpComponentsClientHttpRequestFactory httpRequestFactory()
     {
         CloseableHttpClient httpClient = HttpClients.custom().setSSLHostnameVerifier(new NoopHostnameVerifier()).build()
@@ -55,10 +52,5 @@ class AppConfig {
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED)
         headers.add('Key', clientProperties.key)
         headers
-    }
-
-    @Bean
-    SessionFactory sessionFactory(EntityManagerFactory entityManagerFactory) {
-        entityManagerFactory.getSessionFactory()
     }
 }

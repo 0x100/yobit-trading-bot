@@ -9,12 +9,12 @@ spring:
             hibernate:
                 current_session_context_class: org.springframework.orm.hibernate5.SpringSessionContext
 
-liquibase:
-    change-log: classpath:/liquibase/db.changelog-master.xml
-    url: ${spring.datasource.url}
-    user: sa
-    password:
-    drop-first: false
+    liquibase:
+        change-log: classpath:/liquibase/db.changelog-master.xml
+        url: ${spring.datasource.url}
+        user: sa
+        password:
+        drop-first: false
 
 yobit:
     publicApiUrl:  https://yobit.io/api/3
@@ -26,7 +26,7 @@ yobit:
         tradesHistoryLimit: 7
         depthLimit: 10
 
-httpClient:
+http-client:
     readTimeout: 10000
 
 bot:

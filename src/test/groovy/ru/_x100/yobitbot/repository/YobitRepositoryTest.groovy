@@ -16,12 +16,12 @@ import static org.junit.Assert.assertNotNull
 class YobitRepositoryTest {
 
     @Autowired
-    YobitRepository yobitRepository
+    TradeRepository tradeRepository
 
     @Test
     void getNonce() {
-        Long nonce1 = yobitRepository.getNonce()
-        Long nonce2 = yobitRepository.getNonce()
+        Long nonce1 = tradeRepository.getNonce()
+        Long nonce2 = tradeRepository.getNonce()
 
         assertNotNull(nonce1)
         assertNotNull(nonce2)

@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
 import ru._x100.yobitbot.client.IYobitClient
 import ru._x100.yobitbot.config.YobitApiConfig
 import ru._x100.yobitbot.enums.TradeOperation
-import ru._x100.yobitbot.repository.YobitRepository
+import ru._x100.yobitbot.repository.TradeRepository
 import ru._x100.yobitbot.utils.Utils
 
 @Component
@@ -29,7 +29,7 @@ class YobitClient implements IYobitClient {
     HttpHeaders headers
 
     @Autowired
-    YobitRepository yobitRepository
+    TradeRepository tradeRepository
 
     @Autowired
     Utils utils
@@ -88,7 +88,7 @@ class YobitClient implements IYobitClient {
         log.debug('')
         log.debug('calling getInfo...')
 
-        String params = "method=getInfo&nonce=${yobitRepository.getNonce()}"
+        String params = "method=getInfo&nonce=${tradeRepository.getNonce()}"
         def data = callTradingApi(HttpMethod.POST, params)
 
         log.debug("data: ${data}")
@@ -100,7 +100,7 @@ class YobitClient implements IYobitClient {
         log.debug('')
         log.debug("calling Trade with params: pair ${pair}, type ${type}, rate ${rate}, amount ${amount}...")
 
-        String params = "method=Trade&pair=${pair}&type=${type}&rate=${rate}&amount=${amount}&nonce=${yobitRepository.getNonce()}"
+        String params = "method=Trade&pair=${pair}&type=${type}&rate=${rate}&amount=${amount}&nonce=${tradeRepository.getNonce()}"
         def data = callTradingApi(HttpMethod.POST, params)
 
         log.debug("data: ${data}")
@@ -112,7 +112,7 @@ class YobitClient implements IYobitClient {
         log.debug('')
         log.debug("calling ActiveOrders for pair ${pair}...")
 
-        String params = "method=ActiveOrders&pair=${pair}&nonce=${yobitRepository.getNonce()}"
+        String params = "method=ActiveOrders&pair=${pair}&nonce=${tradeRepository.getNonce()}"
         def data = callTradingApi(HttpMethod.POST, params)
 
         log.debug("data: ${data}")
@@ -124,7 +124,7 @@ class YobitClient implements IYobitClient {
         log.debug('')
         log.debug("calling OrderInfo for order ${orderId}...")
 
-        String params = "method=OrderInfo&order_id=${orderId}&nonce=${yobitRepository.getNonce()}"
+        String params = "method=OrderInfo&order_id=${orderId}&nonce=${tradeRepository.getNonce()}"
         def data = callTradingApi(HttpMethod.POST, params)
 
         log.debug("data: ${data}")
@@ -136,7 +136,7 @@ class YobitClient implements IYobitClient {
         log.debug('')
         log.debug("calling CancelOrder for order ${orderId}...")
 
-        String params = "method=CancelOrder&order_id=${orderId}&nonce=${yobitRepository.getNonce()}"
+        String params = "method=CancelOrder&order_id=${orderId}&nonce=${tradeRepository.getNonce()}"
         def data = callTradingApi(HttpMethod.POST, params)
 
         log.debug("data: ${data}")
